@@ -1,6 +1,7 @@
 package com.globalcards.adapter.driver.processor;
 
 
+import com.globalcards.adapter.infrastructure.entity.InvoiceType;
 import com.globalcards.domain.port.IInvoiceTypeService;
 import io.quarkus.logging.Log;
 import io.smallrye.common.annotation.Blocking;
@@ -27,6 +28,10 @@ public class InvoiceTypeProcessor {
        String payload= message.getPayload();
 
         Log.info("Mensagem recebido " + message.getPayload());
+
+        InvoiceType invoiceType = new InvoiceType();
+
+        this.invoiceTypeService.save(invoiceType);
 
         // Acknowledge the incoming message, marking the RabbitMQ message as `accepted`.
         return message.ack();
