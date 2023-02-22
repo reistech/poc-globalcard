@@ -20,9 +20,13 @@ public class InvoiceTypeProcessor {
     IInvoiceTypeService invoiceTypeService;
 
     @Incoming("requests")
-    public CompletionStage<Void> process(Message<InvoiceType> message) {
+    public CompletionStage<Void> process(Message<String> message) {
 
-        InvoiceType invoiceType = message.getPayload();
+        Log.info("Mensagem recebida " + message.getPayload());
+        InvoiceType invoiceType = new InvoiceType();
+        invoiceType.setName(message.getPayload());
+
+        this.invoiceTypeService.save(invoiceType);
         return message.ack();
     }
 }

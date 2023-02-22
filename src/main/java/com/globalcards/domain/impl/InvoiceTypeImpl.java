@@ -26,7 +26,7 @@ public class InvoiceTypeImpl implements IInvoiceTypeService {
         if (invoiceType == null || invoiceType.id != null) {
             throw new WebApplicationException("Id was invalidly set on request.", 422);
         }
-
+        System.out.println(invoiceType.toString());
         return Panache.withTransaction(invoiceType::persist)
                 .replaceWith(Response.ok(invoiceType).status(CREATED)::build);
     }

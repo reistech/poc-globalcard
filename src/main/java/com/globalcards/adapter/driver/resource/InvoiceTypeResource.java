@@ -23,6 +23,9 @@ import java.util.UUID;
 @Slf4j
 public class InvoiceTypeResource {
 
+    @Channel("sends")
+    Emitter<String> invoyceTypeRequestEmitter;
+
     @Inject
     IInvoiceTypeService invoiceTypeService;
 
@@ -52,6 +55,15 @@ public class InvoiceTypeResource {
     @Path("{id}")
     public Uni<Response> delete(Long id) {
         return invoiceTypeService.delete(id);
+    }
+
+
+    @POST
+    @Path("/emit")
+    @Produces(MediaType.TEXT_PLAIN)
+    public InvoiceType createRequest(InvoiceType invoiceType) {
+        invoyceTypeRequestEmitter.send(String.valueOf(invoiceType));
+        return invoiceType;
     }
 
 }
