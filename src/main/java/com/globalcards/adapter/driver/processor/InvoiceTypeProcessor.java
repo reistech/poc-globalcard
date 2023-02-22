@@ -20,20 +20,10 @@ public class InvoiceTypeProcessor {
     IInvoiceTypeService invoiceTypeService;
 
     @Incoming("requests")
-    @Blocking
-    public CompletionStage<Void> consume(Message<String> message) {
-        Log.info("Mensagem recebido " + message.toString());
+    public CompletionStage<Void> process(Message<InvoiceType> message) {
 
-       String string = message.toString();
-       String payload= message.getPayload();
-
-        Log.info("Mensagem recebido " + message.getPayload());
-
-        InvoiceType invoiceType = new InvoiceType();
-
-        this.invoiceTypeService.save(invoiceType);
-
-        // Acknowledge the incoming message, marking the RabbitMQ message as `accepted`.
+        InvoiceType invoiceType = message.getPayload();
         return message.ack();
     }
 }
+
