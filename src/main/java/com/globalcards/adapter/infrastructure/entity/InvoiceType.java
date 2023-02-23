@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Cacheable
 public class InvoiceType extends PanacheEntity implements Serializable {
 
-    @Column(length = 40, unique = true)
+    @Column( unique = true)
     public String name;
 
 }

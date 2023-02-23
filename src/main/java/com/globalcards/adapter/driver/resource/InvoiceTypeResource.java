@@ -61,9 +61,9 @@ public class InvoiceTypeResource {
     @POST
     @Path("/emit")
     @Produces(MediaType.TEXT_PLAIN)
-    public InvoiceType createRequest(InvoiceType invoiceType) {
-        invoyceTypeRequestEmitter.send(String.valueOf(invoiceType));
-        return invoiceType;
+    public String createRequest(InvoiceType invoiceType) {
+        invoyceTypeRequestEmitter.send(invoiceType.name);
+        return invoiceType.name;
     }
 
 }
