@@ -12,6 +12,9 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -61,9 +64,18 @@ public class InvoiceTypeResource {
     @POST
     @Path("/emit")
     @Produces(MediaType.TEXT_PLAIN)
-    public String createRequest(InvoiceType invoiceType) {
-        invoyceTypeRequestEmitter.send(invoiceType.name);
-        return invoiceType.name;
+    public String createRequest() {
+        UUID uuid = UUID.randomUUID();
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("C:/Users/lucas.barbosa.p.reis/test.txt"));
+
+            invoyceTypeRequestEmitter.send(bufferedReader.readLine());
+            return bufferedReader.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+        return uuid.toString();
     }
 
 }
