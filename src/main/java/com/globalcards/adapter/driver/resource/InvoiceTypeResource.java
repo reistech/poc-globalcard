@@ -23,8 +23,8 @@ import java.util.UUID;
 @Slf4j
 public class InvoiceTypeResource {
 
-    @Channel("sends")
-    Emitter<String> invoyceTypeRequestEmitter;
+//    @Channel("sends")
+//    Emitter<String> invoyceTypeRequestEmitter;
 
     @Inject
     IInvoiceTypeService invoiceTypeService;
@@ -48,7 +48,7 @@ public class InvoiceTypeResource {
 
     @POST
     public Uni<Response> create(InvoiceType invoiceType) {
-        return invoiceTypeService.save(invoiceType);
+                return invoiceTypeService.save(invoiceType);
     }
 
     @DELETE
@@ -58,12 +58,12 @@ public class InvoiceTypeResource {
     }
 
 
-    @POST
-    @Path("/emit")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String createRequest(InvoiceType invoiceType) {
-        invoyceTypeRequestEmitter.send(invoiceType.name);
-        return invoiceType.name;
-    }
+//    @POST
+//    @Path("/emit")
+//    @Produces(MediaType.TEXT_PLAIN)
+//    public String createRequest(InvoiceType invoiceType) {
+//        invoyceTypeRequestEmitter.send(invoiceType.name);
+//        return invoiceType.name;
+//    }
 
 }
