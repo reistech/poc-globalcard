@@ -6,8 +6,10 @@ import com.globalcards.domain.port.IInvoiceTypeService;
 import io.quarkus.hibernate.reactive.panache.Panache;
 import io.quarkus.panache.common.Sort;
 import io.smallrye.mutiny.Uni;
+import org.eclipse.microprofile.reactive.messaging.Message;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.control.ActivateRequestContext;
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
@@ -21,22 +23,30 @@ public class InvoiceTypeImpl implements IInvoiceTypeService {
     @Inject
     InvoiceTypeRepository invoiceTypeRepository;
 
+
     public Uni<Response> save(InvoiceType invoiceType) {
 
         if (invoiceType == null || invoiceType.id != null) {
             throw new WebApplicationException("Id was invalidly set on request.", 422);
         }
-        System.out.println(invoiceType.name);
 
-        var retorno = Panache.withTransaction(invoiceType::persist)
+        return Panache.withTransaction(invoiceType::persist)
                 .replaceWith(Response.ok(invoiceType).status(CREATED)::build);
-        return retorno;
+    }
+
+    @ActivateRequestContext
+    public Uni<Void> saveMessage(Message<String> message) {
+        InvoiceType invoiceType = new InvoiceType();
+        invoiceType.name = message.getPayload();
+        return Panache.withTransaction(invoiceType::persist)
+                .replaceWithVoid();
+
     }
 
     public Uni<Response> update(Long id, InvoiceType invoiceType) {
 
       return  Panache
-              .withTransaction(() -> InvoiceType.<InvoiceType> findById(id)
+              .withTransaction(() -> InvoiceType.<InvoiceType> find("id").firstResult()
                       .onItem().ifNotNull().invoke(entity -> entity.name = invoiceType.name)
               )
               .onItem().ifNotNull().transform(entity -> Response.ok(entity).build())
