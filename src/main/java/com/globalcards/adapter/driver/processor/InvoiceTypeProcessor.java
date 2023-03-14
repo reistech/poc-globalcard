@@ -20,7 +20,7 @@ public class InvoiceTypeProcessor {
     IInvoiceTypeService invoiceTypeService;
 
     @Incoming("requests")
-        public CompletionStage<Void> process(Message<String> message) {
+    public CompletionStage<Void> process(Message<String> message) {
 
         Log.info("Mensagem recebida " + message.getPayload());
         InvoiceType invoiceType = new InvoiceType();
