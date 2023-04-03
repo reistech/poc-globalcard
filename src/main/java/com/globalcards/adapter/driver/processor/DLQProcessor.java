@@ -20,26 +20,19 @@ public class DLQProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(DLQProcessor.class);
     
      @Retry(maxRetries = 4)
-     @Incoming("contract-dead-letter-queue")
+     @Incoming("contract-dlq")
      @Outgoing("fila-output")
      @Acknowledgment(Acknowledgment.Strategy.MANUAL)
-     public Message<String> process(Message<String> incomingMessage) throws RuntimeException {
+     public Message<String> process(Message<String> incomingMessage){
         Message<String> outgoingMessage = null;
         try
         {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             mapper.registerModule(new JavaTimeModule());
-//            BinResponse bin = mapper.readValue(incomingMessage.getPayload(), BinResponse.class);
-//
-//            LOG.info("[Sending message] " + bin.toString());
-            LOG.info("[TimeStamp] " + LocalDateTime.now());
             
-            if (new Random().nextBoolean()) {
-                Thread.sleep(1000);
-                throw new RuntimeException("[TrataRetryAndDLQ] Tratamento de Retries e Dead Letter Queue");
-                
-            }
+            LOG.info("[TimeStamp] Trying incomming  " + LocalDateTime.now());
+            
             outgoingMessage = Message.of(incomingMessage.getPayload(), Metadata.of(fillMetadata(incomingMessage)), incomingMessage::ack);
         } catch(Exception e)
         {

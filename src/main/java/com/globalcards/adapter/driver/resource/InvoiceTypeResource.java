@@ -1,11 +1,15 @@
 package com.globalcards.adapter.driver.resource;
 
+import com.globalcards.adapter.driver.processor.RetryAndDLQProcessor;
 import com.globalcards.adapter.infrastructure.entity.InvoiceType;
 import com.globalcards.domain.port.IInvoiceTypeService;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.microprofile.faulttolerance.Retry;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -15,6 +19,7 @@ import javax.ws.rs.core.Response;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,10 +30,15 @@ import java.util.UUID;
 @Consumes("application/json")
 @Slf4j
 public class InvoiceTypeResource {
-
+    private static final Logger LOG = LoggerFactory.getLogger(InvoiceTypeResource.class);
+    
     @Channel("sends")
     Emitter<String> invoyceTypeRequestEmitter;
-
+    
+    @Channel("contract-output")
+    Emitter<String> contractOutPutEmitter;
+    
+    
     @Inject
     IInvoiceTypeService invoiceTypeService;
 
@@ -59,22 +69,34 @@ public class InvoiceTypeResource {
     public Uni<Response> delete(Long id) {
         return invoiceTypeService.delete(id);
     }
-
-
+    
+    
+    
     @POST
     @Path("/emit")
     @Produces(MediaType.TEXT_PLAIN)
+    @Retry
     public String createRequest() {
-        UUID uuid = UUID.randomUUID();
+    
+    
+        LOG.info("Trying Post [TimeStamp]  " + LocalDateTime.now());
+    
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader("C:/Users/lucas.barbosa.p.reis/test.txt"));
-
-            invoyceTypeRequestEmitter.send(bufferedReader.readLine());
-            return bufferedReader.readLine();
+            String line = bufferedReader.readLine();
+            while( line != null ) {
+                contractOutPutEmitter.send(line);
+                line = bufferedReader.readLine();
+            }
         } catch (IOException e) {
             e.printStackTrace();
-
+            
         }
+        
+        
+//            throw new RuntimeException("[TrataRetryAndDLQ] Tratamento de Retries e Dead Letter Queue");
+
+        UUID uuid = UUID.randomUUID();
         return uuid.toString();
     }
 

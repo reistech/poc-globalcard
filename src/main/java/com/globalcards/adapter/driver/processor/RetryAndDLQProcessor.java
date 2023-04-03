@@ -19,32 +19,38 @@ import java.util.Random;
 public class RetryAndDLQProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(RetryAndDLQProcessor.class);
     
-     @Retry(maxRetries = 4)
+  
      @Incoming("fila-input")
      @Outgoing("fila-output")
      @Acknowledgment(Acknowledgment.Strategy.MANUAL)
-     public Message<String> process(Message<String> incomingMessage) throws RuntimeException {
+     @Retry
+     public Message<String> process(Message<String> incomingMessage) throws Exception {
         Message<String> outgoingMessage = null;
-        try
-        {
+//        try
+//        {
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             mapper.registerModule(new JavaTimeModule());
 
-            LOG.info("[TimeStamp] " + LocalDateTime.now());
+            LOG.info("Trying incomming [TimeStamp]  " + incomingMessage + LocalDateTime.now());
+
+            Random random = new Random();
+         LOG.info(" Random  " + random.nextBoolean());
+         Exception e = new RuntimeException("[TrataRetryAndDLQ] Tratamento de Retries e Dead Letter Queue");
+         incomingMessage.nack( e);
+         throw  e;
+//            if (random.nextBoolean()) {
             
-            if (new Random().nextBoolean()) {
-                Thread.sleep(1000);
-                throw new RuntimeException("[TrataRetryAndDLQ] Tratamento de Retries e Dead Letter Queue");
-                
-            }
-            outgoingMessage = Message.of(incomingMessage.getPayload(), Metadata.of(fillMetadata(incomingMessage)), incomingMessage::ack);
-        } catch(Exception e)
-        {
-            LOG.error(e.getMessage());
-            incomingMessage.nack(e);
-        }
-        return outgoingMessage;
+//                   Thread.sleep(1000);
+
+//           }
+//            outgoingMessage = Message.of(incomingMessage.getPayload(), Metadata.of(fillMetadata(incomingMessage)), incomingMessage::ack);
+//        } catch(Exception e)
+//        {
+//            LOG.error(e.getMessage());
+//           incomingMessage.nack(e);
+//        }
+//        return outgoingMessage;
     }
 
     OutgoingRabbitMQMetadata fillMetadata(Message<String> message) {
