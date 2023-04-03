@@ -21,14 +21,16 @@ public class InvoiceTypeImpl implements IInvoiceTypeService {
     @Inject
     InvoiceTypeRepository invoiceTypeRepository;
 
-    public Uni<Response> save(final InvoiceType invoiceType) {
+    public Uni<Response> save(InvoiceType invoiceType) {
 
         if (invoiceType == null || invoiceType.id != null) {
             throw new WebApplicationException("Id was invalidly set on request.", 422);
         }
-        System.out.println(invoiceType.toString());
-        return Panache.withTransaction(invoiceType::persist)
+        System.out.println(invoiceType.name);
+
+        var retorno = Panache.withTransaction(invoiceType::persist)
                 .replaceWith(Response.ok(invoiceType).status(CREATED)::build);
+        return retorno;
     }
 
     public Uni<Response> update(Long id, InvoiceType invoiceType) {
