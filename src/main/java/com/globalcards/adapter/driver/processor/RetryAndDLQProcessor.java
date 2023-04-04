@@ -17,7 +17,7 @@ import java.util.Random;
 @ApplicationScoped
 public class RetryAndDLQProcessor {
     private static final Logger LOG = LoggerFactory.getLogger(RetryAndDLQProcessor.class);
-     @Retry
+     @Retry()
      @Incoming("fila-input")
      @Outgoing("fila-output")
      @Acknowledgment(Acknowledgment.Strategy.MANUAL)

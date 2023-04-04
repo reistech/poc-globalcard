@@ -16,6 +16,7 @@ public class NamedOptionsConfig {
 //                    .setAutomaticRecoveryEnabled(true)
 //                    .setAutomaticRecoveryOnInitialConnection(false)
                     .setPort(5672)
+                    .setNetworkRecoveryInterval(500000)
                     .setReconnectInterval(500000);
     }
 }
