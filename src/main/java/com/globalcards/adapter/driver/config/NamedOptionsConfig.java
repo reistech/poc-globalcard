@@ -15,8 +15,8 @@ public class NamedOptionsConfig {
 //                    .setSsl(true)
 //                    .setAutomaticRecoveryEnabled(true)
 //                    .setAutomaticRecoveryOnInitialConnection(false)
-                    .setPort(5672)
-                    .setNetworkRecoveryInterval(500000)
-                    .setReconnectInterval(500000);
+                    .setPort(5672);
+//                    .setNetworkRecoveryInterval(500000)
+//                    .setReconnectInterval(500000);
     }
 }
