@@ -24,13 +24,11 @@ public class DLQProcessor {
      @Outgoing("fila-output")
      @Acknowledgment(Acknowledgment.Strategy.MANUAL)
      public Message<String> process(Message<String> incomingMessage){
+        
+        LOG.info("[TimeStamp] Trying incomming  DLQ " + LocalDateTime.now());
         Message<String> outgoingMessage = null;
         try
         {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            mapper.registerModule(new JavaTimeModule());
-            
             LOG.info("[TimeStamp] Trying incomming  " + LocalDateTime.now());
             
             outgoingMessage = Message.of(incomingMessage.getPayload(), Metadata.of(fillMetadata(incomingMessage)), incomingMessage::ack);
@@ -39,6 +37,8 @@ public class DLQProcessor {
             LOG.error(e.getMessage());
             incomingMessage.nack(e);
         }
+        
+         incomingMessage.ack();
         return outgoingMessage;
     }
 

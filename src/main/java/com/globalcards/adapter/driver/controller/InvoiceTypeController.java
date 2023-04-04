@@ -1,6 +1,5 @@
-package com.globalcards.adapter.driver.resource;
+package com.globalcards.adapter.driver.controller;
 
-import com.globalcards.adapter.driver.processor.RetryAndDLQProcessor;
 import com.globalcards.adapter.infrastructure.entity.InvoiceType;
 import com.globalcards.domain.port.IInvoiceTypeService;
 import io.smallrye.mutiny.Uni;
@@ -21,7 +20,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 
 @Path("invoice-type")
@@ -29,14 +27,8 @@ import java.util.UUID;
 @Produces("application/json")
 @Consumes("application/json")
 @Slf4j
-public class InvoiceTypeResource {
-<<<<<<< HEAD
-
-//    @Channel("sends")
-//    Emitter<String> invoyceTypeRequestEmitter;
-
-=======
-    private static final Logger LOG = LoggerFactory.getLogger(InvoiceTypeResource.class);
+public class InvoiceTypeController {
+    private static final Logger LOG = LoggerFactory.getLogger(InvoiceTypeController.class);
     
     @Channel("sends")
     Emitter<String> invoyceTypeRequestEmitter;
@@ -44,8 +36,6 @@ public class InvoiceTypeResource {
     @Channel("contract-output")
     Emitter<String> contractOutPutEmitter;
     
-    
->>>>>>> feat/simulacao-health-check
     @Inject
     IInvoiceTypeService invoiceTypeService;
 
@@ -76,47 +66,25 @@ public class InvoiceTypeResource {
     public Uni<Response> delete(Long id) {
         return invoiceTypeService.delete(id);
     }
-<<<<<<< HEA
-
-
-//    @POST
-//    @Path("/emit")
-//    @Produces(MediaType.TEXT_PLAIN)
-//    public String createRequest(InvoiceType invoiceType) {
-//        invoyceTypeRequestEmitter.send(invoiceType.name);
-//        return invoiceType.name;
-//    }
-=======
-    
-    
     
     @POST
     @Path("/emit")
     @Produces(MediaType.TEXT_PLAIN)
     @Retry
-    public String createRequest() {
-    
-    
+    public String  emit() {
         LOG.info("Trying Post [TimeStamp]  " + LocalDateTime.now());
-    
+        String response = "Não existe arquivo de texto";
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader("C:/Users/lucas.barbosa.p.reis/test.txt"));
             String line = bufferedReader.readLine();
             while( line != null ) {
                 contractOutPutEmitter.send(line);
                 line = bufferedReader.readLine();
+                response = line;
             }
         } catch (IOException e) {
             e.printStackTrace();
-            
         }
-        
-        
-//            throw new RuntimeException("[TrataRetryAndDLQ] Tratamento de Retries e Dead Letter Queue");
-
-        UUID uuid = UUID.randomUUID();
-        return uuid.toString();
+        return response;
     }
->>>>>>> feat/simulacao-health-check
-
 }
