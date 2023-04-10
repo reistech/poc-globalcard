@@ -26,7 +26,7 @@ public class RetryAndDLQProcessor {
         Message<String> outgoingMessage = null;
         
         Exception e = new RuntimeException("[TrataRetryAndDLQ] Tratamento de Retries e Dead Letter Queue");
-        outgoingMessage = Message.of(incomingMessage.getPayload(), Metadata.of(fillMetadata(incomingMessage)),incomingMessage::ack);
+            outgoingMessage = Message.of(incomingMessage.getPayload(), Metadata.of(fillMetadata(incomingMessage)),incomingMessage::ack);
         if (new Random().nextBoolean()) {
             Thread.sleep(1000);
             incomingMessage.nack(e);

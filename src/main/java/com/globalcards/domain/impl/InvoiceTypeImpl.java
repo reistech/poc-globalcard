@@ -23,11 +23,11 @@ import static javax.ws.rs.core.Response.Status.*;
 @ApplicationScoped
 public class InvoiceTypeImpl implements IInvoiceTypeService {
     
-    @Channel("sends")
-    Emitter<String> invoyceTypeRequestEmitter;
-    
-    @Channel("contract-output")
-    Emitter<String> contractOutPutEmitter;
+//    @Channel("sends")
+//    Emitter<String> invoyceTypeRequestEmitter;
+//
+//    @Channel("contract-output")
+//    Emitter<String> contractOutPutEmitter;
     
     @Inject
     InvoiceTypeRepository invoiceTypeRepository;
