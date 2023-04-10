@@ -21,7 +21,7 @@ public class DLQProcessor {
     
      @Retry(maxRetries = 4)
      @Incoming("contract-dlq")
-     @Outgoing("fila-output")
+     @Outgoing("dlq-output")
      @Acknowledgment(Acknowledgment.Strategy.MANUAL)
      public Message<String> process(Message<String> incomingMessage){
         

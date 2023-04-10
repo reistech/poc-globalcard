@@ -11,10 +11,6 @@ public class NamedOptionsConfig {
     @Identifier("options")
     public static RabbitMQOptions getNamedOptions() {
             return new RabbitMQOptions()
-//                    .setTrustAll(true)
-//                    .setSsl(true)
-//                    .setAutomaticRecoveryEnabled(true)
-//                    .setAutomaticRecoveryOnInitialConnection(false)
                     .setPort(5672)
                     .setNetworkRecoveryInterval(500000)
                     .setReconnectInterval(500000);
