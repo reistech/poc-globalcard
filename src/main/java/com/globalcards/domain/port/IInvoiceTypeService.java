@@ -18,6 +18,4 @@ public interface IInvoiceTypeService {
 
     Uni<Response> update(Long Id, InvoiceType invoiceType);
     
-//    Uni<Response> emit();
-
 }

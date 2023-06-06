@@ -1,8 +1,5 @@
 package com.globalcards.adapter.driver.processor;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.smallrye.reactive.messaging.rabbitmq.IncomingRabbitMQMetadata;
 import io.smallrye.reactive.messaging.rabbitmq.OutgoingRabbitMQMetadata;
 import org.eclipse.microprofile.faulttolerance.Retry;
@@ -13,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import javax.enterprise.context.ApplicationScoped;
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.Random;
 
 @ApplicationScoped
 public class DLQProcessor {
